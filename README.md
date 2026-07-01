@@ -1,7 +1,7 @@
 # `@apmg/vertical-video-carousel`
 
 [![NPM Stable Release](https://badgen.net/npm/v/@apmg/vertical-video-carousel)](https://www.npmjs.com/package/@apmg/vertical-video-carousel)
-[![MIT License](https://badgen.net/badge/license/MIT/blue)](https://github.com/APMG/apm-vertical-video-carousel/blob/main/LICENSE.md)
+[![MIT License](https://badgen.net/badge/license/MIT/blue)](https://github.com/APMG/apm-vv/blob/main/LICENSE.md)
 
 A themeable, horizontally-scrolling carousel for short-form (9:16) YouTube video — Shorts, TikTok-style clips, etc. Built as a framework-free Web Component under the hood, with a thin React/TypeScript wrapper on top, so it can be dropped into any APM site or app: Next.js, plain React, or neither.
 
@@ -75,7 +75,7 @@ interface VerticalVideoConfig {
   video_url: string; // any YouTube URL shape: watch?v=, youtu.be/, /shorts/, embed/
   title: string;
   image_url?: string; // custom poster image; falls back to a YouTube thumbnail
-  link_url?: string; // "Learn more" destination; falls back to the YouTube watch URL
+  link_url?: string; // "Learn more" destination; omit it and the bar renders empty (no text/link)
 }
 ```
 

@@ -6,6 +6,7 @@ export interface VerticalVideoConfig {
   video_url: string;
   title: string;
   image_url?: string;
+  /** "Learn more" destination. Omit it and the bar renders empty (no text/link). */
   link_url?: string;
 }
 

@@ -25,7 +25,9 @@
  *
  * image_url:      editorial/CMS image (preferred). Falls back to YouTube maxresdefault,
  *                 stepping down through sddefault/hqdefault if a resolution is unavailable.
- * link_url:       destination URL for the "Learn More" link. Falls back to YouTube URL.
+ * link_url:       destination URL for the "Learn More" link. Omit it and the bar
+ *                 still renders (for consistent card heights) but empty, with
+ *                 no text and no link.
  * heading:        section title. Defaults to "Watch".
  * channel-url:    link target for the channel label. Omit to hide the link entirely.
  * channel-label:  text for the channel link. Defaults to "Our Channel".
@@ -320,10 +322,10 @@ class ApmVerticalVideoCarousel extends HTMLElement {
     const imageUrl = escapeHtml(
       video.image_url || `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`
     );
-    // link_url is the destination article/page URL; falls back to YouTube watch URL
-    const linkUrl = escapeHtml(
-      video.link_url || `https://www.youtube.com/watch?v=${ytId}`
-    );
+    // link_url is optional — videos without one still get the bar (for consistent
+    // card heights across a row) but it renders empty, with no text and no link
+    const hasLink = Boolean(video.link_url);
+    const linkUrl = hasLink ? escapeHtml(video.link_url) : '';
 
     return `
       <div class="apm-vvc__slide" role="listitem">
@@ -352,11 +354,15 @@ class ApmVerticalVideoCarousel extends HTMLElement {
             ${title ? `<p class="apm-vvc__title">${title}</p>` : ''}
           </div>
         </div>
-        <a class="apm-vvc__cta" href="${linkUrl}" aria-label="Learn more${
-          title ? ': ' + title : ''
-        }">
+        ${
+          hasLink
+            ? `<a class="apm-vvc__cta" href="${linkUrl}" aria-label="Learn more${
+                title ? ': ' + title : ''
+              }">
           <span aria-hidden="true">&#8594;</span> Learn more
-        </a>
+        </a>`
+            : `<div class="apm-vvc__cta" aria-hidden="true"></div>`
+        }
       </div>
     `;
   }
@@ -414,9 +420,13 @@ class ApmVerticalVideoCarousel extends HTMLElement {
       '.apm-vvc__aspect[data-activated] .apm-vvc__overlay { opacity: 0; transition: none; }',
 
       /* Learn More CTA — solid, themeable via --apm-vvc-cta-bg / --apm-vvc-cta-color */
+      /* Shared bar styling applies to both the link (<a>, has a destination) and the
+         empty placeholder (<div>, rendered when link_url is omitted) so card heights
+         stay consistent across a row of mixed videos; hover/focus are <a>-only since
+         the placeholder is not interactive. */
       '.apm-vvc__cta { display: flex; align-items: center; gap: 0.375rem; height: 3rem; flex-shrink: 0; padding: 0 0.875rem; color: var(--apm-vvc-cta-color, #fff); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; text-decoration: none; background: var(--apm-vvc-cta-bg, #000); border-top: 1px solid rgba(255,255,255,0.12); transition: filter 0.15s; border-radius: 0 0 12px 12px; }',
-      '.apm-vvc__cta:hover { filter: brightness(1.25); }',
-      '.apm-vvc__cta:focus-visible { outline: 3px solid var(--apm-vvc-accent, #005fcc); outline-offset: -3px; }',
+      'a.apm-vvc__cta:hover { filter: brightness(1.25); }',
+      'a.apm-vvc__cta:focus-visible { outline: 3px solid var(--apm-vvc-accent, #005fcc); outline-offset: -3px; }',
 
       /* Prev/next arrows — small circular buttons in the bottom-right strip */
       '.apm-vvc__nav { display: none; position: absolute; bottom: 0; z-index: 5; width: 32px; height: 32px; align-items: center; justify-content: center; background: rgba(255,255,255,0.92); border: none; border-radius: 50%; cursor: pointer; color: #444; box-shadow: 0 2px 8px rgba(0,0,0,0.16); padding: 0; transition: opacity 0.2s, color 0.15s, background 0.15s; }',
