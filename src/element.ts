@@ -36,6 +36,7 @@
  * card-height:    height of each video card (any CSS length). Defaults to 572px.
  *                 Card width is derived from this via the fixed 9:16 aspect ratio,
  *                 so a shorter card is also narrower and more fit in view.
+ * card-radius:    corner radius of each video card (any CSS length). Defaults to 4px.
  * accent-color:   focus-outline color for keyboard navigation. Defaults to #005fcc.
  * heading-color:  color of the heading text. Defaults to inherit.
  * cta-background: background color of the "Learn More" bar. Defaults to #000.
@@ -60,6 +61,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
       'full-bleed',
       'fade-color',
       'card-height',
+      'card-radius',
       'accent-color',
       'heading-color',
       'cta-background',
@@ -75,6 +77,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
     return {
       'fade-color': '--apm-vvc-bg',
       'card-height': '--apm-vvc-card-height',
+      'card-radius': '--apm-vvc-card-radius',
       'accent-color': '--apm-vvc-accent',
       'heading-color': '--apm-vvc-heading-color',
       'cta-background': '--apm-vvc-cta-bg',
@@ -376,7 +379,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
       // ancestor sizing itself to fit content will size to the un-shrunk width of every
       // slide side-by-side (flex children below use flex-shrink: 0) instead of letting
       // .apm-vvc__track's own overflow-x: auto handle the excess via scrolling.
-      'apm-vertical-video-carousel { display: block; min-width: 0; font-family: var(--apm-vvc-font, inherit); --apm-vvc-card-height: 572px; }',
+      'apm-vertical-video-carousel { display: block; min-width: 0; font-family: var(--apm-vvc-font, inherit); --apm-vvc-card-height: 572px; --apm-vvc-card-radius: 4px; }',
 
       /* Header */
       '.apm-vvc__header { display: flex; align-items: baseline; justify-content: space-between; padding: 1.5rem 1rem 0.875rem; }',
@@ -388,7 +391,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
       '.apm-vvc__outer { position: relative; padding-bottom: 2.75rem; }',
       '.apm-vvc__outer--full-bleed { width: 100vw; margin-left: calc(50% - 50vw); }',
 
-      /* Right-edge fade — hides when scrolled to end; stops above the button strip */
+      /* Right-edge fade — hides when scrolled to end, and below 640px where nav arrows are hidden too; stops above the button strip */
       '.apm-vvc__outer::after { content: ""; position: absolute; top: 0; right: 0; bottom: 2.75rem; width: 8rem; background: linear-gradient(to right, transparent, var(--apm-vvc-bg, #fff)); pointer-events: none; z-index: 4; transition: opacity 0.3s; }',
       '.apm-vvc__outer--at-end::after { opacity: 0; }',
 
@@ -398,7 +401,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
 
       /* Slide — width is derived from the 9:16 aspect ratio so --apm-vvc-card-height controls the visible video height directly */
       '.apm-vvc__slide { flex: 0 0 auto; width: clamp(200px, 50vw, calc(var(--apm-vvc-card-height, 572px) * 9 / 16)); scroll-snap-align: start; display: flex; flex-direction: column; }',
-      '.apm-vvc__aspect { position: relative; aspect-ratio: 9 / 16; border-radius: 12px 12px 0 0; overflow: hidden; background: #111; }',
+      '.apm-vvc__aspect { position: relative; aspect-ratio: 9 / 16; border-radius: var(--apm-vvc-card-radius, 4px) var(--apm-vvc-card-radius, 4px) 0 0; overflow: hidden; background: #111; }',
 
       /* Play button — covers full aspect area */
       '.apm-vvc__play-btn { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; background: none; cursor: pointer; display: block; z-index: 1; }',
@@ -424,7 +427,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
          empty placeholder (<div>, rendered when link_url is omitted) so card heights
          stay consistent across a row of mixed videos; hover/focus are <a>-only since
          the placeholder is not interactive. */
-      '.apm-vvc__cta { display: flex; align-items: center; gap: 0.375rem; height: 3rem; flex-shrink: 0; padding: 0 0.875rem; color: var(--apm-vvc-cta-color, #fff); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; text-decoration: none; background: var(--apm-vvc-cta-bg, #000); border-top: 1px solid rgba(255,255,255,0.12); transition: filter 0.15s; border-radius: 0 0 12px 12px; }',
+      '.apm-vvc__cta { display: flex; align-items: center; gap: 0.375rem; height: 3rem; flex-shrink: 0; padding: 0 0.875rem; color: var(--apm-vvc-cta-color, #fff); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; text-decoration: none; background: var(--apm-vvc-cta-bg, #000); border-top: 1px solid rgba(255,255,255,0.12); transition: filter 0.15s; border-radius: 0 0 var(--apm-vvc-card-radius, 4px) var(--apm-vvc-card-radius, 4px); }',
       'a.apm-vvc__cta:hover { filter: brightness(1.25); }',
       'a.apm-vvc__cta:focus-visible { outline: 3px solid var(--apm-vvc-accent, #005fcc); outline-offset: -3px; }',
 
@@ -434,6 +437,7 @@ class ApmVerticalVideoCarousel extends HTMLElement {
       '.apm-vvc__nav--prev { right: 3rem; }',
       '.apm-vvc__nav--next { right: 0.5rem; }',
       '@media (min-width: 640px) { .apm-vvc__nav { display: flex; } }',
+      '@media (max-width: 639px) { .apm-vvc__outer::after { display: none; } }',
 
       /* A touch of breathing room around the track on phone/tablet widths */
       '@media (max-width: 1024px) { .apm-vvc__track { margin-left: 1rem; margin-right: 1rem; } }',

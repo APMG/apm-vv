@@ -26,6 +26,8 @@ export interface VerticalVideoCarouselProps {
    * shorter card is also narrower and more fit in view.
    */
   cardHeight?: string;
+  /** Corner radius of each video card (any CSS length, e.g. "4px"). Defaults to 4px. */
+  cardRadius?: string;
   /** Focus-outline color for keyboard navigation. Defaults to #005fcc. */
   accentColor?: string;
   /** Color of the heading text. Defaults to inherit. */
@@ -50,6 +52,7 @@ declare global {
           'channel-label'?: string;
           'fade-color'?: string;
           'card-height'?: string;
+          'card-radius'?: string;
           'accent-color'?: string;
           'heading-color'?: string;
           'cta-background'?: string;
@@ -72,6 +75,7 @@ const VerticalVideoCarousel = ({
   channelLabel,
   fadeColor,
   cardHeight,
+  cardRadius,
   accentColor,
   headingColor,
   ctaBackground,
@@ -106,6 +110,7 @@ const VerticalVideoCarousel = ({
       channel-label={channelLabel}
       fade-color={fadeColor}
       card-height={cardHeight}
+      card-radius={cardRadius}
       accent-color={accentColor}
       heading-color={headingColor}
       cta-background={ctaBackground}
